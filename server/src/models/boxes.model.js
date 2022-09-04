@@ -26,8 +26,14 @@ async function updateBox(boxId, field, value) {
     `update boxes set ${field} = $1 where box_id = $2 returning *`,
     [value, boxId]
   );
-  if (result.rowCount === 0) return false;
   return result.rows[0];
+}
+
+async function deleteBox(boxId) {
+  const result = await pool.query("delete from boxes where box_id = $1", [
+    boxId,
+  ]);
+  return result.rowCount;
 }
 
 module.exports = {
@@ -35,4 +41,5 @@ module.exports = {
   getAllBoxes,
   getBox,
   updateBox,
+  deleteBox,
 };

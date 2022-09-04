@@ -3,6 +3,7 @@ const {
   getAllBoxes,
   getBox,
   updateBox,
+  deleteBox,
 } = require("../../models/boxes.model");
 
 const { admin } = require("../../../config");
@@ -55,9 +56,25 @@ async function httpUpdateBox(req, res, next) {
   }
 }
 
+async function httpDeleteBox(req, res, next) {
+  try {
+    const { boxId } = req.params;
+    const { password } = req.body;
+
+    if (password !== admin.password) return res.sendStatus(404);
+
+    const result = await deleteBox(boxId);
+    if (!result) return res.status(404).json({ error: "Box not found" });
+    return res.sendStatus(204);
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   httpCreateBox,
   httpGetAllBoxes,
   httpGetBox,
   httpUpdateBox,
+  httpDeleteBox,
 };
