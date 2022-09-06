@@ -1,23 +1,13 @@
 const {
-  createBox,
   getAllBoxes,
   getBox,
-  updateBox,
+  updateReserved,
+  updateSold,
+  createBox,
   deleteBox,
 } = require("../../models/boxes.model");
 
 const { admin } = require("../../../config");
-
-async function httpCreateBox(req, res, next) {
-  try {
-    const { password, boxId, imageUrl } = req.body;
-    if (password !== admin.password) return res.sendStatus(404);
-    const result = await createBox(boxId, imageUrl);
-    return res.json(result);
-  } catch (err) {
-    next(err);
-  }
-}
 
 async function httpGetAllBoxes(req, res, next) {
   try {
@@ -39,18 +29,46 @@ async function httpGetBox(req, res, next) {
   }
 }
 
+/************ user or admin authentication required ***********/
+
 async function httpUpdateBox(req, res, next) {
   try {
     const { boxId } = req.params;
-    const { password, field, value } = req.body;
+    const { userId, userPassword, isReserved, adminPassword, isSold } =
+      req.body;
 
-    if (password !== admin.password) return res.sendStatus(404);
+    // user request
+    if (userId) {
+      const result = await updateReserved(
+        userId,
+        userPassword,
+        boxId,
+        isReserved
+      );
+      if (!result) return res.sendStatus(404);
+      return res.status(200).json(result.rows[0]);
+    }
 
-    const result = await updateBox(boxId, field, value);
-    console.log(result);
+    // admin request
+    if (adminPassword !== admin.password) return res.sendStatus(404);
+
+    const result = await updateSold(boxId, isSold);
     if (!result) res.status(400).json({ error: "box_id no encontrado" });
 
     return res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**************** admin authentication required ***************/
+
+async function httpCreateBox(req, res, next) {
+  try {
+    const { password, boxId, imageUrl } = req.body;
+    if (password !== admin.password) return res.sendStatus(404);
+    const result = await createBox(boxId, imageUrl);
+    return res.json(result);
   } catch (err) {
     next(err);
   }
@@ -70,6 +88,8 @@ async function httpDeleteBox(req, res, next) {
     next(err);
   }
 }
+
+/**************************************************************/
 
 module.exports = {
   httpCreateBox,
