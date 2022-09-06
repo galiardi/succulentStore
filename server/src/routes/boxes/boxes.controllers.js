@@ -34,19 +34,13 @@ async function httpGetBox(req, res, next) {
 async function httpUpdateBox(req, res, next) {
   try {
     const { boxId } = req.params;
-    const { userId, userPassword, isReserved, adminPassword, isSold } =
-      req.body;
+    const { userId, userPassword, reserve, adminPassword, isSold } = req.body;
 
     // user request
     if (userId) {
-      const result = await updateReserved(
-        userId,
-        userPassword,
-        boxId,
-        isReserved
-      );
+      const result = await updateReserved(userId, userPassword, boxId, reserve);
       if (!result) return res.sendStatus(404);
-      return res.status(200).json(result.rows[0]);
+      return res.status(200).json(result);
     }
 
     // admin request
