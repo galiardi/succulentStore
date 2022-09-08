@@ -13,6 +13,9 @@ app.use(express.json());
 
 app.use("/boxes", boxesRouter);
 app.use("/users", usersRouter);
+app.get("/", (req, res) => {
+  res.status(200).json({ hello: "world" });
+});
 
 app.use((err, req, res, next) => {
   return res.status(500).json({ error: err.message });
