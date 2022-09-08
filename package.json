@@ -1,0 +1,20 @@
+{
+  "name": "suculentas",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "install": "npm install --prefix server",
+    "deploy": "npm start --prefix server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/galiardi/succulentStore.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/galiardi/succulentStore/issues"
+  },
+  "homepage": "https://github.com/galiardi/succulentStore#readme"
+}
