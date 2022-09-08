@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "install": "npm install --prefix server",
-    "deploy": "npm start --prefix server"
+    "start": "npm start --prefix server"
   },
   "repository": {
     "type": "git",
