@@ -2,7 +2,9 @@ const { admin } = require("../../config");
 const pool = require("./db");
 
 async function getAllBoxes() {
-  const boxes = await pool.query("select * from boxes");
+  const boxes = await pool.query(
+    "select * from boxes where reserved_by is null"
+  );
   return boxes.rows;
 }
 
